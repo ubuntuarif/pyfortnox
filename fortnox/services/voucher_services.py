@@ -9,7 +9,8 @@ class VoucherService(object):
     """
     Allowed attributes for Voucher to send to Fortnox backend servers.
     """
-    OPTS_KEYS_TO_PERSIST = ['Description', 'VoucherSeries', 'TransactionDate', 'VoucherRows']
+    OPTS_KEYS_TO_PERSIST = ['Description', 'VoucherSeries', 'TransactionDate', 'VoucherRows',
+                            'Comments', 'CostCenter', 'Project']
 
     """
     VoucherRows has the following structures:
@@ -107,8 +108,8 @@ class VoucherService(object):
         if not args and not kwargs:
             raise Exception('attributes for Voucher are missing')
 
-        attributes = args[0] if args else kwargs
-        attributes = dict((k, v) for k, v in attributes.items() if k in self.OPTS_KEYS_TO_PERSIST)
+        initial_attributes = args[0] if args else kwargs
+        attributes = dict((k, v) for k, v in initial_attributes.items())
         attributes.update({'service': self.SERVICE})
         _, _, voucher = self.http_client.post("/vouchers", body=attributes)
         return voucher
